@@ -1,154 +1,157 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>Page Title</title>
-		<style>
-		    canvas.can2{
-		        margin:0;
-		        background-image:url('https://b.imge.to/2019/10/08/vFxsV1.png');
-		    }
-		    body{
-		        margin:0;
-		    }
-		    button{
-		        position:absolute;
-		        left:0px;
-		        padding:10px;
-		        background-color:#000000;
-		        color:#ffffff;
-		        border:0;
-		    }
-		    button.play{
-		        top:400px;
-		        font-family:"Old English Text MT";
-		        width:160px;
-		        font-size:18px;
-		    }
-		    button.credits{
-		        top:450px;
-		        font-family:"Old English Text MT";
-		        width:150px;
-		        font-size:18px;
-		    }
-		    button.quit{
-		        top:500px;
-		        font-family:"Old English Text MT";
-		        width:140px;
-		        font-size:18px;
-		    }
-		    button.play:hover{
-		        top:400px;
-		        background-color:#000000;
-		        color:#ffffff;
-		        font-weight:600;
-		        width:190px;
-		        font-size:20px;
-		        font-family:"Old English Text MT";
-		    }
-		    button.credits:hover{
-		        top:450px;
-		        background-color:#000000;
-		        color:#ffffff;
-		        font-weight:600;
-		        font-size:20px;
-		        width:180px;
-		        font-family:"Old English Text MT";
-		    }
-		    button.quit:hover{
-		        top:500px;
-		        background-color:#000000;
-		        color:#ffffff;
-		        font-weight:600;
-		        font-size:20px;
-		        width:170px;
-		        font-family:"Old English Text MT";
-		    }
-		    p.heading{
-		        text-align:center;
-		        font-family:"Old English Text MT";
-		        position:absolute;
-		        left:30px;
-				font-size:80px
-		    }
-		</style>
-	</head>
-	<body>
-	    <p class="heading">Assasination of  The  Assasin</p>
-	    <button class="play">Play</button>
-	    <button class="credits">Credits</button>
-	    <button class="quit">Quit</button>
-	    <canvas id="myCanvas2" class="can2" width="1450px" height="780px"></canvas>
-		<script>
-		    var canvas2=document.getElementById("myCanvas2");
-		    var ctx2=canvas2.getContext("2d");
-		    var img1=new Image();
-		    var img2=new Image();
-		    img1.src='https://a.imge.to/2019/10/07/vFM13F.png';
-		    img2.src='https://c.imge.to/2019/10/07/vFMHYV.png';
-		    var count=0;
-		    var change=0;
-		    class forRandom
-		    {
-		        n;
-		        rand()
-		        {
-		            this.n=Math.ceil(Math.random()*500);
-                    if(this.n>=10)
-                    {
-                        return this.n;
+using System;
+using System.Threading;
+
+namespace TIC_TAC_TOE
+
+{
+
+    class Program{
+
+        static char[] arr = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+        static int player = 1; //By default player 1 is set  
+        static int choice; //This holds the choice at which position user want to mark   
+		
+		
+		//flag iss for checking the match status. if flag = 1 then someone won the game 
+		//and if flag = -1 then match is draw and if 0 then match is still going
+        static int flag = 0;
+
+        static void Main(string[] args){
+
+            do{
+
+                Console.Clear();// whenever loop will be again start then screen will be clear  
+                Console.WriteLine("Player1:X and Player2:O");
+                Console.WriteLine("\n");
+                if(player % 2 == 0){
+                    Console.WriteLine("Player 2 Chance");
+                }
+                else
+                {
+                    Console.WriteLine("Player 1 Chance");
+                }
+
+                Console.WriteLine("\n");
+                Board();// calling the board Function  
+                choice = int.Parse(Console.ReadLine());//Taking users choice   
+
+                if (arr[choice] != 'X' && arr[choice] != 'O'){
+
+					if (player % 2 == 0){
+                        arr[choice] = 'O';
+                        player++;
                     }
-                    return null;
-		        }
-		    }
-		    var fr=new forRandom();
-		    var i1={
-		        x:canvas2.width,
-		        y:fr.rand(),
-		    }
-		    var i2={
-		        x:canvas2.width,
-		        y:fr.rand(),
-		    }
-		    function anime()
-		    {
-		        ctx2.clearRect(0,0,canvas2.width,canvas2.height);
-		        count++;
-		        if(count>=150)
-		        {
-		            change++;
-		            count=0;
-		        
-		            if(change%2==0)
-		            {
-		                if(i1.x+150<=0)
-		                {   
-		                    i1.y=fr.rand();
-		                    i1.x=canvas2.width;
-		                }
-				
-		            }
-		            else if(change%2==1)
-		            {
-		                if(i2.x+150<=0)
-		                {
-		                    i2.y=fr.rand();
-		                    i2.x=canvas2.width;
-		                }
-					}
-		        }
-		        if(i2.y!=null)
-				{
-					ctx2.drawImage(img2,i2.x,i2.y);
-				}
-		        
-				if(i1.y!=null)
-				{
-					ctx2.drawImage(img1,i1.x,i1.y);
-				}
-		        i1.x-=8;
-		        i2.x-=10;
-		    }
-		    var s=setInterval(anime,10);
-		</script>
-	</body>
-</html>
+                    else
+                    {
+                        arr[choice] = 'X';
+                        player++;
+                    }
+
+                }
+
+                else{
+
+                    Console.WriteLine("Sorry the row {0} is already marked with {1}", choice, arr[choice]);
+                    Console.WriteLine("\n");
+                    Console.WriteLine("Please wait 2 second board is loading again.....");
+                    Thread.Sleep(2000);
+
+                }
+
+                flag = CheckWin();// calling of check win  
+
+            }while (flag != 1 && flag != -1);// This loof will be run until all cell of the grid is not marked with X and O or some player is not win  
+
+            Console.Clear();// clearing the console  
+            Board();// getting filled board again  
+
+            if (flag == 1)// if flag value is 1 then some one has win or means who played marked last time which has win  
+            {
+                Console.WriteLine("Player {0} has won", (player % 2) + 1);
+            }
+            else// if flag value is -1 the match will be draw and no one is winner  
+            {
+                Console.WriteLine("Draw");
+            }
+            Console.ReadLine();
+        }
+
+        // Board method which creats board  
+
+        private static void Board()
+        {
+
+            Console.WriteLine("     |     |      ");
+            Console.WriteLine("  {0}  |  {1}  |  {2}", arr[1], arr[2], arr[3]);
+            Console.WriteLine("_____|_____|_____ ");
+            Console.WriteLine("     |     |      ");
+            Console.WriteLine("  {0}  |  {1}  |  {2}", arr[4], arr[5], arr[6]);
+            Console.WriteLine("_____|_____|_____ ");
+            Console.WriteLine("     |     |      ");
+            Console.WriteLine("  {0}  |  {1}  |  {2}", arr[7], arr[8], arr[9]);
+			Console.WriteLine("     |     |      ");
+
+        }
+
+        //Checking that any player has won or not  
+
+        private static int CheckWin()
+        {
+            #region Horzontal Winning Condtion
+            //Winning Condition For First Row   
+            if (arr[1] == arr[2] && arr[2] == arr[3])
+            {
+                return 1;
+            }
+            //Winning Condition For Second Row   
+            else if (arr[4] == arr[5] && arr[5] == arr[6])
+            {
+                return 1;
+            }
+            //Winning Condition For Third Row   
+            else if (arr[6] == arr[7] && arr[7] == arr[8])
+            {
+                return 1;
+            }
+            #endregion
+            #region vertical Winning Condtion
+            //Winning Condition For First Column       
+            else if (arr[1] == arr[4] && arr[4] == arr[7])
+            {
+                return 1;
+            }
+            //Winning Condition For Second Column  
+            else if (arr[2] == arr[5] && arr[5] == arr[8])
+            {
+                return 1;
+            }
+            //Winning Condition For Third Column  
+            else if (arr[3] == arr[6] && arr[6] == arr[9])
+            {
+                return 1;
+            }
+            #endregion
+            #region Diagonal Winning Condition
+            else if (arr[1] == arr[5] && arr[5] == arr[9])
+            {
+                return 1;
+            }
+            else if (arr[3] == arr[5] && arr[5] == arr[7])
+            {
+                return 1;
+            }
+            #endregion
+            #region Checking For Draw
+            // If all the cells or values filled with X or O then any player has won the match  
+            else if (arr[1] != '1' && arr[2] != '2' && arr[3] != '3' && arr[4] != '4' && arr[5] != '5' && arr[6] != '6' && arr[7] != '7' && arr[8] != '8' && arr[9] != '9')
+            {
+                return -1;
+            }
+            #endregion
+            else
+            {
+                return 0;
+            }
+        }
+    }
+}  
